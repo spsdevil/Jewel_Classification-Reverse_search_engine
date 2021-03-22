@@ -1,0 +1,5 @@
+bracelet
+earring
+necklace
+pendant
+ring

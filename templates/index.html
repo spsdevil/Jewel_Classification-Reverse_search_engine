@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<title>Jewelery | API</title>
+
+<!-- Favicon -->
+<link rel="apple-touch-icon" sizes="180x180" href="{{url_for('static', filename='images/apple-touch-icon.png')}}">
+<link rel="icon" type="image/png" sizes="32x32" href="{{url_for('static', filename='images/favicon-32x32.png')}}">
+<link rel="icon" type="image/png" sizes="16x16" href="{{url_for('static', filename='images/favicon-16x16.png')}}">
+<link rel="manifest" href="{{url_for('static', filename='images/site.webmanifest')}}">
+<!-- //Favicon -->
+
+<!-- Meta tag Keywords -->
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="keywords" content="Thawait Medical web template, Bootstrap Web Templates, Flat Web Templates, Android Compatible web template, Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, SonyEricsson, Motorola web design" />
+<script type="application/x-javascript"> addEventListener("load", function() { setTimeout(hideURLbar, 0); }, false);
+function hideURLbar(){ window.scrollTo(0,1); } </script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+<!--// Meta tag Keywords -->
+
+<!-- css files -->
+<link rel="stylesheet" href="{{url_for('static', filename='css/bootstrap.css')}}"> <!-- Bootstrap-Core-CSS -->
+<link rel="stylesheet" href="{{url_for('static', filename='css/style.css')}}" type="text/css" media="all" /> <!-- Style-CSS --> 
+<link rel="stylesheet" href="{{url_for('static', filename='css/font-awesome.css')}}"> <!-- Font-Awesome-Icons-CSS -->
+<link rel="stylesheet" href="{{url_for('static', filename='css/cm-overlay.css')}}" type="text/css" />
+<link rel="stylesheet" href="{{url_for('static', filename='css/style_1.css')}}">
+<link rel="stylesheet" href="{{url_for('static', filename='css/style_2.css')}}">
+<!-- //css files -->
+
+<!-- online-fonts -->
+<link href="//fonts.googleapis.com/css?family=Convergence" rel="stylesheet">
+<link href="//fonts.googleapis.com/css?family=ABeeZee:400,400i" rel="stylesheet">
+<!-- //online-fonts -->
+</head>
+<body> 
+<div class="Main-agile">
+<!-- banner -->
+<div class="banner-2">
+	<div class="container">
+		<div class="col-md-4 logo">
+			<!-- <div class="logo-w3l">
+				<i class="fa fa-medkit" aria-hidden="true"></i>
+			</div> -->
+			<h1><a href="">Jewelery Search Engine</a></h1>
+		</div>
+		<div class="testbox">
+	      <form method="POST" enctype="multipart/form-data">
+	        <div class="colums">
+	           <div class="item">
+	          <label><b>Search Image For:</b></label>
+	          <input type="file" name="query_img">
+	        </div>
+
+	        <div class="item">
+	          <label><b>Catagory:</b></label>
+	          <select class="select-css" name="mod">
+	            <option selected disabled>--Select Catagory--</option>
+	            <option value="1">All</option>
+	            <option value="2">Bracelate</option>
+	            <option value="3">Earings</option>
+	            <option value="4">Necklace</option>
+	            <option value="5">Pendant</option>
+	            <option value="6">Rings</option>
+	          </select>
+	        </div>
+	        <div class="item">
+        	  <label><b>CONFIDENCE:</b></label>
+	          <input type="number" min="1" max="100" value='70' name="conf" />
+	          {% if query_path %}
+        	  <h3><b>Total Images:  {{ total_images }}</b></h3>
+        	  <h3><b>Result Images: {{ total_results }}</b></h3>
+        	  <h3>Image Name:-</h3><h3 id="QUERY_IMG_ID">{{ query_path[7:] }}</h3>
+		      {% endif %}
+	        </div>
+
+	        <div class="item">
+	          {% if query_path %}
+	          <h2>Query:- </h2>
+	          <img src="{{ query_path }}" width="200px" height="200px">
+	          {% endif %}
+	        </div>
+	          <button type="submit">Search</button>
+	        </div>
+	      </form>
+	    </div>
+		<div class="clearfix"></div>
+		</div>
+	</div>
+</div>
+</div>
+<!-- //banner -->
+
+<!-- main -->
+<!-- //gallery-->
+	<div class="portfolio" id="gallery">
+		<div class="container">
+				<h3 class="w3l_head">My Gallery <span></span></h3>
+				<div class="agileits_portfolio_grids">
+					<div class="container">
+					{% for result_img in result_images %}
+					<div class="col-md-3 agileits_portfolio_grid" id="{{result_img[0][0]}}">
+						<h4>{{ result_img[3] }}. {{ result_img[0] }}</h4>
+						<div class="agileinfo_portfolio_grid hovereffect">
+							<a>
+								<img src="{{ result_img[2] }}" alt=" " class="img-responsive" width="480px" height="300px">
+								<div class="overlay">
+									<h4>{{ result_img[1] }}</h4>
+									<button class="button button_2" type="button" onclick="delete_img('{{ result_img[0] }}')">Delete</button>
+									<button class="button button_2" type="button" onclick="sim_update('{{ result_img[0] }}')">Edit</button>
+								</div>
+							</a>
+						</div>
+					</div>
+					
+					{% endfor %}
+				</div>
+				<div class="clearfix"> </div>
+			</div>
+		</div>
+	</div>
+<!-- //gallery -->
+{% block javascript %}
+<script>
+  function delete_img(delete_img){
+    var query_img = $("#QUERY_IMG_ID").text();
+    console.log("asdfghjkl",query_img, "wertyuio", delete_img)
+    $.ajax({
+            type: 'GET',
+            url: "/delete_img",
+            data: {"q_name": query_img, "c_name": delete_img},
+            success: function(response) {
+            	console.log(response)
+				$(document).ready(function(){
+				$("button").click(function(){
+				$("#"+delete_img).remove();
+				});
+				});
+				document.location.reload();
+            },
+            error: function (response) {
+                console.log(response)
+            }
+        })
+  }
+  function sim_update(cur_img){
+    var query_img = $("#QUERY_IMG_ID").text();
+    var sim = prompt("Please Enter Only Number in Between '1 - 100'");
+    console.log("asdfghjkl",query_img, "wertyuio", cur_img, sim)
+    if (sim != null) {
+	    $.ajax({
+	            type: 'GET',
+	            url: "/sim_update",
+	            data: {"q_name": query_img, "c_name": cur_img, "sim": sim},
+	            success: function(response) {
+	            	console.log(response)
+	            	document.location.reload();
+	            },
+	            error: function (response) {
+	                console.log(response)
+	            }
+	        })
+		}
+  }
+  function get_img(page){
+    var query_img = $("#QUERY_IMG_ID").text();
+    console.log("asdfghjkl",query_img, "page",page)
+    $.ajax({
+            type: 'GET',
+            url: "/get_img_for_pages",
+            data: {"q_name": query_img, "page": page},
+            success: function(response) {
+            	console.log(response)
+            	window.document.load();
+            },
+            error: function (response) {
+                console.log(response)
+            }
+        })
+  }
+</script>
+{% endblock javascript %}
+
+
+<!-- //main -->
+
+<!-- Footer -->
+<div class="footer w3ls">
+	<div class="container">
+		<div class="footer-main">
+			<div class="footer-top">
+				<div class="col-md-4 ftr-grid">
+					
+
+					<div class="logo-fo" style="text-align: center;">
+						<h2><a href="index.html">Jewelery Search Engine</span></a></h2>
+					</div>
+				</div>
+			</div>
+				
+			
+		</div>
+	</div>
+</div>
+<!-- //Footer -->
+
+<!-- js-scripts -->			
+	
+		<!-- js -->
+			<script type="text/javascript" src="{{url_for('static', filename='js/jquery-2.1.4.min.js')}}"></script>
+			<script type="text/javascript" src="{{url_for('static', filename='js/bootstrap.js')}}"></script> <!-- Necessary-JavaScript-File-For-Bootstrap --> 
+		<!-- //js -->
+		
+		<!-- for-Gallery -->
+				 <!-- js -->
+				<script src="{{url_for('static', filename='js/jquery.tools.min.js')}}"></script>
+				<script src="{{url_for('static', filename='js/jquery.mobile.custom.min.js')}}"></script>
+				<script src="{{url_for('static', filename='js/jquery.cm-overlay.js')}}"></script>
+				<script>
+					$(document).ready(function(){
+						$('.cm-overlay').cmOverlay();
+					});
+				</script>
+		<!-- //for-Gallery -->
+		
+<!-- //js-scripts -->
+</body>
+</html>
